@@ -1,0 +1,29 @@
+Controllers npm install
+
+REST API'S -- Principles
+
+1. Client Server Architecture
+2. Uniform Interface(Readability of the URL)
+METHODS:
+-PUT
+-POST
+-GET
+-DELETE
+
+3. Layered System :( Multiple layers  for getting response from api)
+ index.js <-- Controller --> Service --> Model --> Database -- Request
+ index.js <-- Controller <-- Service <-- Model <-- Database -- Response
+
+4. Stateless -- Server won't remember any request or response who requested
+
+Routing: 
+Routing refers to determining how an application respond to client request to a particular endpoint
+which is URI (or path) and a specific HTTP request method(GET,POST,and so on)
+
+Route Parameter
+    To access Route parameters from request object
+        request.query.parameterName:
+
+Query Parameter:
+    To access Query parameters from request object
+        request.query.parameterName:

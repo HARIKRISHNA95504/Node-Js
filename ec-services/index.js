@@ -1,33 +1,40 @@
 const express = require('express')
 const app = express()
+
+const productsCtrl = require('./controllers/products.ctrls')
+const employeeCtrls = require('./controllers/employees.ctrls')
 // This the first api
 app.get('/',(request,response)=>{
     response.send('Welcome to Express Js')
 })
 // another api 
+app.get('/products/:id',productsCtrl.getById)
+app.delete('/products/:id',productsCtrl.delete)
+app.get('/products',productsCtrl.getAll)
+app.get('/employees',employeeCtrls.getAll)
 
-app.get('/products',(request,response)=>{
-    response.send({
-        products:[
-            {
-            name:'Iphone 16 promax',
-            price:49999
-        },
-        {
-            name:'Realme 7',
-            price:25600
-        },
-        {
-            name:'Motorola',
-            price:49999
-        },
-        {
-            name:'Iphone 16 promax',
-            price:49999
-        },
-        ]
-    })
-})
+// app.get('/products',(request,response)=>{
+//     response.send({
+//         products:[
+//             {
+//             name:'Iphone 16 promax',
+//             price:49999
+//         },
+//         {
+//             name:'Realme 7',
+//             price:25600
+//         },
+//         {
+//             name:'Motorola',
+//             price:49999
+//         },
+//         {
+//             name:'Iphone 16 promax',
+//             price:49999
+//         },
+//         ]
+//     })
+// })
 // Another Api for employee
 app.get('/employee',(request,response)=>{
     response.send({

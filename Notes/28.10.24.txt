@@ -1,0 +1,57 @@
+ --------------Toipic : Routing:--------
+
+ JSON.stringify() - javascript object/Array to string format
+ JSON.parse() -- converts string to javascript Array/object
+
+ package:
+
+ Body Parser - it listens only the rrequet body
+ > Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
+  
+ Installation:
+    npm install body-parser
+
+    const bodyParser = require('body-parser);
+       
+        app.use(bodyParser.json())
+
+"use " is a predifined object it links with the express object when ever comes the request 
+that  request converts into the  object
+
+index.js
+step-1
+const express = require('express')
+const bodyParser = require('body-parser')
+const app = express()
+
+step-2:
+app.use(bodyParser.json())
+
+step-3:
+app.get('/products/:id',productsCtrl.getById)
+app.delete('/products/:id',productsCtrl.delete)
+app.get('/products',productsCtrl.getAll)
+app.get('/employees',employeeCtrls.getAll)
+app.post('/products',productsCtrl.create)
+
+products.ctrls.js
+
+step:1
+    create:(request,response)=>{
+        console.log(request.body)
+
+    },
+
+
+--> Express Router : 
+
+const express = require('express');
+const router = express.Router();
+
+router.methodName('/',callbackFunc);
+
+module.exports = router;
+
+--> index.js
+   const routerInstance = require(relativePath);
+   app.use('/',routerInstance)

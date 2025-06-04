@@ -58,10 +58,23 @@ const productsCtrl={
         }
     },
     create:(request,response)=>{
+        console.log(request.body)
+        products.push(request.body);
+        response.send({
+                message:'inserted message successfully'
+    }   )
 
     },
     update:(request,response)=>{
-        
+       const index = products.findIndex(product => product.id === parseInt(request.params.id))
+       if (index !==-1){
+        products.splice(index,1,request.body)
+        response.send({
+            message:"Updated Successsfully"
+        })
+       }else{
+        message:"unable to find the matching product"
+        } 
     }
 }
 

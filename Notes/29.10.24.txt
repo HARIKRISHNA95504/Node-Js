@@ -1,0 +1,10 @@
+ MAGODB : MangoDb is a NoSQL Database
+
+ > Stores Data in form of Collections
+    
+    Collection - Array
+    Document - Object
+                Key & Value Pairs
+                mongodb+srv://Harikrishna:<db_password>@nodejs-cluster1.rm9towc.mongodb.net/
+                mongodb+srv://Harikrishna:@20FH1a0596@nodejs-cluster1.rm9towc.mongodb.net/
+                Password : @20FH1a0596

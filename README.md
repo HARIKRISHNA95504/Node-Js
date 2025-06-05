@@ -176,7 +176,6 @@ db.users.countDocuments()
   upsertedCount: 0
 }
 * db.users.find()
-```
 {
   _id: ObjectId('68411eb61c399b5b0f065846'),
   firsrName: 'Charan',
@@ -184,7 +183,80 @@ db.users.countDocuments()
   email: 'charan.k@gmail.com',
   mobile: 9898989898
 }
+
 ```
+* Install Mangose
+* integrate mangose library
+* for the URL
+* go to the database access and click on connect
+* Then Click on Drivers option
+* And then  Add your connection string into your application code
+* mongodb+srv://Harikrishna:<db_password>@nodejs-cluster1.rm9towc.mongodb.net/?retryWrites=true&w=majority&appName=Nodejs-Cluster1
+* index.js
+```
+const mongoose = require('mongoose')
+```
+* in the below url the password must be %40 for the '@'
+* insted of Password: @20FH1a0596
+```
+Password : %4020FH1a0596
+```
+```
+mongoose.connect('mongodb+srv://Harikrishna:%4020FH1a0596@nodejs-cluster1.rm9towc.mongodb.net/ecommerce-dev?retryWrites=true&w=majority&appName=Nodejs-Cluster1').then(()=>{
+    console.log('connected to  DB Successfully!')
+}).catch((error)=>{
+    console.log(error)
+
+})
+```
+* To create Model for a collection:
+```
+const mongoose = require('mongoose')
+ const productSchema = mongoose.Schema({
+    name:'String',
+    imgSrc:'String',
+    price:'String'
+
+ })
+
+ const productModel = mongoose.model(collectionName,productSchema);
+```
+* create folder in ec-services the folder name is 'models'
+* And create file the file name is 'product.model.js'
+* product.model.js
+```
+const mongoose = require('mongoose')
+
+const productSchema = mongoose.Schema({
+    name:{
+        type:String,
+        default:null,
+        required:true
+    },
+    email:{
+        type:String,
+        default:''
+    },
+    actualPrice:{
+        type:String,
+        default:0
+    },
+    discount:{
+        type:Number,
+        default:0
+    },
+    specifications:{
+        type:Array,
+        default:[]
+    },
+    inStock:{
+        type:Boolean,
+        default:[]
+    }
+
+ });
+ const productModel = mongoose.Schema('products',productSchema)
+ module.exports = productModel;
 ```
 
 

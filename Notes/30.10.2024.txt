@@ -3,7 +3,29 @@ Mango Db: MangoDB is a soruce-available, cross-platform, document-oriented datab
 > Supported Programming Languages : Python,Javascript, Java,GO,PHP,C,C++,Perl,Ruby
 
 
+Commands :
+
+> To Show databases :
+ command : show dbs
+> To switch to specific database:
+ command : use databaseName
+> To count the number of documents:
+  command : db.collectionName.countDocuments()
+> To insert the document:
+  command : db.collectionName.insert({key:value,key:value});
+> To delete the document:
+  command : db.collectionName.deleteDocument({key:value})
+
+> To retrive specific document :
+  command : db.collectionName.findOne({key:value});
+
+> To update specific document :
+  command : db.collectionName.update({_id:''},{$set:{key:value}});
+
 Mongoose:
+> Mongoose is a javascript object-oriented programming library that creates a connection between mongoDB and the Node.js javascript runtime environment. 
+> it provides andstraightforward, schems-based solution to model application data
+
 Inatallation Mangoose
 
         npm install mongoose

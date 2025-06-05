@@ -18,5 +18,7 @@ const usersCtrl = require('../controllers/users.ctrl')
 router.get('/:id',usersCtrl.getById)
 router.get('/',usersCtrl.getAll)
 router.delete('/:id',usersCtrl.delete)
+router.post('/',usersCtrl.create)
+router.put('/:id',usersCtrl.update)
 
 module.exports =router;

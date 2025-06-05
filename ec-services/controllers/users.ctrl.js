@@ -72,7 +72,7 @@ const usersCtrl={
         else{
             response.send({message:"unable to find index"})
         }
-    }
+    },
     // create:(request,response)=>{
     //     console.log(request.body)
     //     products.push(request.body);
@@ -92,6 +92,19 @@ const usersCtrl={
     //     message:"unable to find the matching product"
     //     } 
     // }
+    create:(request,response)=>{
+        users.push(request.body)
+        response.send({message:"user inserted suceessfully"})
+    },
+    update:(request,response)=>{
+        const index = users.findIndex(user => user.id ===parseInt(request   .params.id))
+        if (index !==-1){
+            users.splice(index,1,request.body)
+            response.send({message:"user updated succeccefully"})
+        }else{
+        message:"unable to find the matching product"
+        } 
+    }
 }
 
 // const productsCtrl={

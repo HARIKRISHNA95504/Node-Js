@@ -1,0 +1,31 @@
+Mango Db: MangoDB is a soruce-available, cross-platform, document-oriented database program classified as a noSQL Database Product
+> MangoDB utilizes JSON-like documents with optional schemas
+> Supported Programming Languages : Python,Javascript, Java,GO,PHP,C,C++,Perl,Ruby
+
+
+Mongoose:
+Inatallation Mangoose
+
+        npm install mongoose
+ link: https://mongoosejs.com/docs/index.html
+
+ To establish connection between node.js  and mongo db:
+
+        var mangoose = require('mangoose);
+
+        mangoose.connect(dbURL,()=>{
+            console.log('DB is up on runnig!')
+        })
+
+
+To create Model for a collection:
+ 
+ const mongoose = require('mongoose')
+ const productSchema = mongoose.Schema({
+    name:'String',
+    imgSrc:'String',
+    price:'String'
+
+ })
+
+ const productModel = mongoose.model(collectionName,productSchema);

@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 const app = express()
 
 
@@ -69,4 +70,10 @@ app.get('/employee',(request,response)=>{
 
 app.listen(3000,()=>{
     console.log('server is up on running')
+})
+mongoose.connect('mongodb+srv://Harikrishna:%4020FH1a0596@nodejs-cluster1.rm9towc.mongodb.net/ecommerce-dev?retryWrites=true&w=majority&appName=Nodejs-Cluster1').then(()=>{
+    console.log('connected to  DB Successfully!')
+}).catch((error)=>{
+    console.log(error)
+
 })

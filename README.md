@@ -258,6 +258,21 @@ const productSchema = mongoose.Schema({
  const productModel = mongoose.Schema('products',productSchema)
  module.exports = productModel;
 ```
+# date: 1-11-2024 Topic: mongoose CRUD operations
+# to automatically run the server 
+* install
+* Nodemon: it monitors the file changes and restarts the server.
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm install -global nodemon
+```
+* To start the server
+* nodemon
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm install -global nodemon
+```
+
+
+
 
 
 

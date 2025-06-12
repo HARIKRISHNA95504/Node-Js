@@ -1,0 +1,11 @@
+PUT VS PATCH
+
+PUT : 
+For PUT we need to pass every field or every key value present in document to update it.
+
+PATCH :
+For PATCH we can specify key value pairs which needs to update.
+
+Promise : -- ES6
+
+Async And Await  -- ES7

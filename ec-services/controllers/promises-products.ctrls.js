@@ -1,4 +1,4 @@
-const { response } = require("express");
+const { response, request } = require("express");
 const products=[]
 const productsModal = require('../models/product.model');
 const productModel = require("../models/product.model");
@@ -131,6 +131,50 @@ const productsCtrl={
                 
             })
        
+    },
+    patch:(request,response)=>{
+        const productId = request.params.id;
+        productsModal.findById(productId)
+            .then(product=>{
+
+            
+                    if(product){
+                        for(let key in request.body){
+                            product[key]=request.body[key];
+                        }
+
+                        productsModal.findByIdAndUpdate(productId,{$set:product},{new:true}) 
+                            // {new : true} it returns the lastest updates of product
+                        .then(savedProduct=>{
+                            response.status(200)
+                            response.send({
+                                message:'Updated product successfully',
+                                data: savedProduct
+                                })
+
+                        }).catch(error=>{
+                            response.status(500)
+                            response.send({
+                                message:'unable to Update the product',
+                                error:error
+                            })
+                            
+                        })
+                        }else{
+                            response.status(404)
+                            response.send({
+                            message:' product not found',
+                        })
+                        }
+
+                }).catch(error=>{
+                    response.status(500)
+                    response.send({
+                        message:'unable to retrive the product',
+                        error:error
+                    })
+                    
+                })
     }
 }
 

@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 //import the productsCtrls
-const productsCtrl = require('../controllers/products.ctrls')
+// const productsCtrl = require('../controllers/products.ctrls')
+
+const productsCtrl = require('../controllers/promises-products.ctrls')
 
 router.get('/:id',productsCtrl.getById)
 router.get('/',productsCtrl.getAll)

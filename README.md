@@ -409,6 +409,8 @@ pagination: async (request,response)=>{
 http://localhost:3000/products/pagination?pageIndex=0&pageSize=15&order=asc&sortParam=discount
 ```
 
+# User Model
+
 
 
 

@@ -270,6 +270,42 @@ PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm install -global nodemon
 ```
 PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm install -global nodemon
 ```
+# date:5-11-2024 Topic:Pagination
+# Pagination
+* in postman we can the url like these
+```
+http://localhost:3000/products/pagination?pageIndex=0&pageSize=1
+```
+* And the we enterd the values of pageIndex AND pageSize for what ever the records we want
+* than we will get the products
+```
+{
+    "metadata": {
+        "noOfPages": 2,
+        "hasNext": true,
+        "hasPrevious": false
+    },
+    "data": [
+        {
+            "_id": "684a1757ca394d4e34f9b862",
+            "name": " Vivo Galaxy M35 5G (Moonlight Blue, 128 GB)",
+            "imgSrc": "https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/x/y/l/-original-imah8pvvhmj76hvg.jpeg?q=70",
+            "actualPrice": "59900",
+            "discount": 20,
+            "specifications": [
+                "9 GB RAM | 128 GB ROM",
+                "16.76 cm (6.6 inch) Display",
+                "64MP Rear Camera",
+                "6000 mAh Battery",
+                "5 YEAR"
+            ],
+            "inStock": true,
+            "__v": 0
+        }
+    ]
+}
+```
+
 
 
 

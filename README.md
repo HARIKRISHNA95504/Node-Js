@@ -305,6 +305,109 @@ http://localhost:3000/products/pagination?pageIndex=0&pageSize=1
     ]
 }
 ```
+* For Pagination we can write the code
+```
+pagination: async (request,response)=>{
+        const {pageIndex,pageSize} = request.query;
+        try{
+                const count = await productsModal.countDocuments();
+                const roundedCount = Math.ceil(count/pageSize)
+            const metadata={
+                currentPage:parseInt(pageIndex)+1,
+                noOfPages:count/pageSize,
+                hasNext: (roundedCount === pageIndex+1),
+                hasPrevious:pageIndex > 0
+            }
+            const products = await productsModal.find()
+                                .skip(pageIndex*pageSize)
+                                .limit(pageSize)
+            response.status(200)
+            response.send({
+                metadata,
+                data:products
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrieve product',
+                error:error
+            })
+        }
+    }
+```
+# Sorting :
+* Ascending or descendeing order is a Sortung
+* give the credential in the postman
+```
+http://localhost:3000/products/pagination?pageIndex=0&pageSize=15
+```
+```
+pagination: async (request,response)=>{
+        const {pageIndex,pageSize} = request.query;
+        try{
+                const count = await productsModal.countDocuments();
+                const roundedCount = Math.ceil(count/pageSize)
+            const metadata={
+                currentPage:parseInt(pageIndex)+1,
+                noOfPages:count/pageSize,
+                hasNext: (roundedCount === pageIndex+1),
+                hasPrevious:pageIndex > 0
+            }
+            const products = await productsModal.find()
+                                .skip(pageIndex*pageSize)
+                                .sort('discount') // Ascending Order
+                                .limit(pageSize)
+            response.status(200)
+            response.send({
+                metadata,
+                data:products
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrieve product',
+                error:error
+            })
+        }
+    }
+```
+* Here is the additional requirements are orderParam and sortParam included
+```
+pagination: async (request,response)=>{
+        const {pageIndex,pageSize,order,sortParam} = request.query;
+        const orderParam =order === 'asc'? '':'-'
+        try{
+                const count = await productsModal.countDocuments();
+                const roundedCount = Math.ceil(count/pageSize)
+            const metadata={
+                currentPage:parseInt(pageIndex)+1,
+                noOfPages:count/pageSize,
+                hasNext: (roundedCount === pageIndex+1),
+                hasPrevious:pageIndex > 0
+            }
+            const products = await productsModal.find()
+                                .skip(pageIndex*pageSize)
+                                // .sort('discount') // Ascending Order
+                                .sort(orderParam+sortParam)
+                                .limit(pageSize)
+            response.status(200)
+            response.send({
+                metadata,
+                data:products
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrieve product',
+                error:error
+            })
+        }
+    }
+```
+* in postman we can give like these
+```
+http://localhost:3000/products/pagination?pageIndex=0&pageSize=15&order=asc&sortParam=discount
+```
 
 
 

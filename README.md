@@ -523,6 +523,162 @@ const bcrypt = require('bcrypt');
 ```
  await bcrypt.compare(myPlaintextPassword, hash);
 ```
+* users.ctrl.js
+```
+loginWithPassword:async(request,response)=>{
+        try{
+            const user = await userService.getByEmailOrMobileNo(request.body.emailOrMobileNo)
+            if(user){
+                const isPasswordMatched = await bcrypt.compare(request.body.password,user.password);
+                if(isPasswordMatched){
+                    response.status(200)
+                    response.send({
+                        message:'Logged In Successfully!!'
+                    })
+                    
+                }else{
+                    response.status(400)
+                    response.send({
+                        message:'incorrect Password',
+                    })
+                }
+                }else{
+                response.status(400)
+                response.send({
+                    message:'unregistered email or mobile no'
+                })
+            }
+
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to login the user'
+            })
+        }
+    }
+```
+* for delete user
+```
+deleteUser: async(request,response)=>{
+        try{
+            await userService.deleteById(request.params.id);
+            response.status(200)
+            response.send({
+                message:"deleted user successfully"
+            })
+
+        }catch(error){
+            console.log(error)
+            response.status(500)
+            response.send({
+                error:"unable to delete the user"
+            })
+        }
+    }
+```
+* for get the user by Id
+ ```
+getById: async(request,response)=>{
+        try{
+            const user = await userService.getById(request.params.id);
+            response.status(200)
+            response.send({
+                message:"  Retrieved user successfully",
+                data:user
+            })
+
+        }catch(error){
+            console.log(error)
+            response.status(500)
+            response.send({
+                error:"unable to retrieve the user"
+            })
+        }
+    },
+```
+* for get the all users
+```
+ getAll: async(request,response)=>{
+        try{
+            const user = await userService.getAll();
+            response.status(200)
+            response.send({
+                message:"  Retrieved users successfully",
+                data:user
+            })
+
+        }catch(error){
+            console.log(error)
+            response.status(500)
+            response.send({
+                error:"unable to retrieve the users"
+            })
+        }
+    },
+```
+* for update the user
+```
+updateUser: async(request,response)=>{
+        try{
+            const user = await userService.updateUser(request.params.id,request.body)
+            response.status(200)
+            response.send({
+                message:'user updated successfully',
+                data:user
+            })
+
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to update user'
+            })
+        }
+    }
+```
+* users.service.js
+```
+const userModel = require('../models/user.model')
+
+const userSvc = {
+    create: async(data) =>{
+        const user = new userModel(data);
+        return await user.save();
+    },
+    getAll:async()=>{
+        return userModel.find()
+    },
+    getById: async()=>{
+        return userModel.findById(id);
+    },
+    getByEmailOrMobileNo:(emailMobileNo)=>{
+        return userModel.findOne({
+            $or:[
+                {email:emailMobileNo},
+                {mobileNo:emailMobileNo}
+            ]
+        })
+    },
+    deleteById: async(id)=>{
+        return userModel.findByIdAndDelete(id)
+    },
+    updateUser : async(id,data)=>{
+        return userModel.findByIdAndUpdate(id,{$set:data},{new:true});
+    }
+
+}
+module.exports =userSvc;
+```
+* users.router.js
+```
+router.post('/register',usersCtrl.register)
+router.post('/login-with-password',usersCtrl.loginWithPassword)
+router.delete('/:id',usersCtrl.deleteUser)
+router.get('/:id',usersCtrl.getById)
+router.get('/',usersCtrl.getAll)
+router.put('/:id',usersCtrl.updateUser)
+```
+
+
 
 
 

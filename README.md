@@ -410,6 +410,96 @@ http://localhost:3000/products/pagination?pageIndex=0&pageSize=15&order=asc&sort
 ```
 
 # User Model
+* create a model the neame should be user.model.js
+* user.model.js
+```
+const mongoose = require('mongoose')
+
+const userSchema = new mongoose.Schema({
+    firstName:{
+        type:String,
+        default:null,
+    },
+    lastName:{
+        type:String,
+        default:null
+    },
+    email:{
+        type:String,
+        default:null
+    },
+    password:{
+        type:String,
+        default:null
+    },
+    otp:{
+        type:String,
+        default:null
+    },
+    mobileNo:{
+        type:String,
+        default:null
+    }
+
+ });
+//  const productModel = mongoose.Schema('products',productSchema)
+
+ const userModel =mongoose.model('users',userSchema);
+ module.exports = userModel;
+```
+* creating a folder services
+* users.service.js
+```
+const userModel = require('../models/user.model')
+
+const userSvc = {
+    create: async(data) =>{
+        const user = new userModel(data);
+        return await user.save();
+    },
+    getAll:async()=>{
+        return user.find()
+    },
+    getById: async()=>{
+        return user.findById(id);
+    }
+
+}
+module.exports =userSvc;
+```
+* users.ctrl.js
+```
+const userService = require('../services/users.service')
+
+const userCtrl ={
+    register:async(request,response)=>{
+        try{
+            const user = await userService.create(request.body)
+            response.status(201)
+            response.send({
+                message:'Register User Successfully',
+                data:user
+            })
+
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to register the user'
+            })
+        }
+    }
+}
+
+module.exports = userCtrl;
+```
+* changes in
+* users.router.js
+```
+const express = require('express');
+const router = express.Router();
+const usersCtrl = require('../controllers/users.ctrl')
+router.post('/register',usersCtrl.register)
+module.exports =router;
 
 
 

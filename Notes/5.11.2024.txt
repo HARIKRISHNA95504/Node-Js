@@ -1,0 +1,25 @@
+Pagination :
+It is Functionalyty
+    1 st Page - skip 0 -0
+    2nd Page - skip 10 -1
+    3rd Page - skip 20 -2
+    4th Page - skip 30 -3
+
+    Page Index - 0,1,2,3
+
+    Page Size - 10, 5, 20
+
+    Function:
+
+    countDoucuments() : Return no of documents present in collection
+
+    .find()
+    .skip(pageIndex*pageSize) 
+    .limit(pageSize)
+
+
+
+    Sorting:
+        Ascending :
+
+        Descending :

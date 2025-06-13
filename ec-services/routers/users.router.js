@@ -13,7 +13,7 @@ const express = require('express');
 const router = express.Router();
 
 //import the productsCtrls
-const usersCtrl = require('../controllers/async-await-users.ctrls')
+const usersCtrl = require('../controllers/users.ctrl')
 
 router.get('/:id',usersCtrl.getById)
 router.get('/',usersCtrl.getAll)

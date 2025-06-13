@@ -134,6 +134,38 @@ const productsCtrl={
                 message:'unable to update the product'
             })
         }
+    },
+    // Pagenation.....
+
+    pagination: async (request,response)=>{
+        const {pageIndex,pageSize,order,sortParam} = request.query;
+        const orderParam =order === 'asc'? '':'-'
+        try{
+                const count = await productsModal.countDocuments();
+                const roundedCount = Math.ceil(count/pageSize)
+            const metadata={
+                currentPage:parseInt(pageIndex)+1,
+                noOfPages:count/pageSize,
+                hasNext: (roundedCount === pageIndex+1),
+                hasPrevious:pageIndex > 0
+            }
+            const products = await productsModal.find()
+                                .skip(pageIndex*pageSize)
+                                // .sort('discount') // Ascending Order
+                                .sort(orderParam+sortParam)
+                                .limit(pageSize)
+            response.status(200)
+            response.send({
+                metadata,
+                data:products
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrieve product',
+                error:error
+            })
+        }
     }
 }
 module.exports =productsCtrl;

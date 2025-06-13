@@ -5,7 +5,7 @@ const router = express.Router();
 // const productsCtrl = require('../controllers/products.ctrls')
 
 const productsCtrl = require('../controllers/async-await-products.ctrls')
-
+router.get('/pagination',productsCtrl.pagination)
 router.get('/:id',productsCtrl.getById)
 router.get('/',productsCtrl.getAll)
 router.delete('/:id',productsCtrl.delete)

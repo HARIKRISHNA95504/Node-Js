@@ -270,6 +270,147 @@ PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm install -global nodemon
 ```
 PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm install -global nodemon
 ```
+# date:5-11-2024 Topic:Pagination
+# Pagination
+* in postman we can the url like these
+```
+http://localhost:3000/products/pagination?pageIndex=0&pageSize=1
+```
+* And the we enterd the values of pageIndex AND pageSize for what ever the records we want
+* than we will get the products
+```
+{
+    "metadata": {
+        "noOfPages": 2,
+        "hasNext": true,
+        "hasPrevious": false
+    },
+    "data": [
+        {
+            "_id": "684a1757ca394d4e34f9b862",
+            "name": " Vivo Galaxy M35 5G (Moonlight Blue, 128 GB)",
+            "imgSrc": "https://rukminim2.flixcart.com/image/312/312/xif0q/mobile/x/y/l/-original-imah8pvvhmj76hvg.jpeg?q=70",
+            "actualPrice": "59900",
+            "discount": 20,
+            "specifications": [
+                "9 GB RAM | 128 GB ROM",
+                "16.76 cm (6.6 inch) Display",
+                "64MP Rear Camera",
+                "6000 mAh Battery",
+                "5 YEAR"
+            ],
+            "inStock": true,
+            "__v": 0
+        }
+    ]
+}
+```
+* For Pagination we can write the code
+```
+pagination: async (request,response)=>{
+        const {pageIndex,pageSize} = request.query;
+        try{
+                const count = await productsModal.countDocuments();
+                const roundedCount = Math.ceil(count/pageSize)
+            const metadata={
+                currentPage:parseInt(pageIndex)+1,
+                noOfPages:count/pageSize,
+                hasNext: (roundedCount === pageIndex+1),
+                hasPrevious:pageIndex > 0
+            }
+            const products = await productsModal.find()
+                                .skip(pageIndex*pageSize)
+                                .limit(pageSize)
+            response.status(200)
+            response.send({
+                metadata,
+                data:products
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrieve product',
+                error:error
+            })
+        }
+    }
+```
+# Sorting :
+* Ascending or descendeing order is a Sortung
+* give the credential in the postman
+```
+http://localhost:3000/products/pagination?pageIndex=0&pageSize=15
+```
+```
+pagination: async (request,response)=>{
+        const {pageIndex,pageSize} = request.query;
+        try{
+                const count = await productsModal.countDocuments();
+                const roundedCount = Math.ceil(count/pageSize)
+            const metadata={
+                currentPage:parseInt(pageIndex)+1,
+                noOfPages:count/pageSize,
+                hasNext: (roundedCount === pageIndex+1),
+                hasPrevious:pageIndex > 0
+            }
+            const products = await productsModal.find()
+                                .skip(pageIndex*pageSize)
+                                .sort('discount') // Ascending Order
+                                .limit(pageSize)
+            response.status(200)
+            response.send({
+                metadata,
+                data:products
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrieve product',
+                error:error
+            })
+        }
+    }
+```
+* Here is the additional requirements are orderParam and sortParam included
+```
+pagination: async (request,response)=>{
+        const {pageIndex,pageSize,order,sortParam} = request.query;
+        const orderParam =order === 'asc'? '':'-'
+        try{
+                const count = await productsModal.countDocuments();
+                const roundedCount = Math.ceil(count/pageSize)
+            const metadata={
+                currentPage:parseInt(pageIndex)+1,
+                noOfPages:count/pageSize,
+                hasNext: (roundedCount === pageIndex+1),
+                hasPrevious:pageIndex > 0
+            }
+            const products = await productsModal.find()
+                                .skip(pageIndex*pageSize)
+                                // .sort('discount') // Ascending Order
+                                .sort(orderParam+sortParam)
+                                .limit(pageSize)
+            response.status(200)
+            response.send({
+                metadata,
+                data:products
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrieve product',
+                error:error
+            })
+        }
+    }
+```
+* in postman we can give like these
+```
+http://localhost:3000/products/pagination?pageIndex=0&pageSize=15&order=asc&sortParam=discount
+```
+
+# User Model
+
 
 
 

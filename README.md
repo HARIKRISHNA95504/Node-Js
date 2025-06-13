@@ -501,6 +501,30 @@ const usersCtrl = require('../controllers/users.ctrl')
 router.post('/register',usersCtrl.register)
 module.exports =router;
 
+```
+# date: 7-11-2024  Topic: Hashing
+* Hashing Technique : Hashing is convert plain text into hash.
+* Bcrypt:
+* installation :
+```
+npm install bcrypt
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm install bcrypt
+```
+
+* To Hash Password :
+```
+const bcrypt = require('bcrypt');
+
+    await bcrypt.hash(myPlaintextPassword, saltRounds)
+```
+* To compare Hash with Plain password :
+```
+ await bcrypt.compare(myPlaintextPassword, hash);
+```
+
+
 
 
 

@@ -128,12 +128,15 @@
 // //     }
 // // }
 // module.exports =usersCtrl;
+const { response, request } = require('express');
 const userService = require('../services/users.service')
+const bcrypt = require('bcrypt');
 
 const userCtrl ={
     register:async(request,response)=>{
         try{
-            const user = await userService.create(request.body)
+            const hasedPassword = await bcrypt.hash(request.body.password,5);
+            const user = await userService.create({...request.body,password:hasedPassword})
             response.status(201)
             response.send({
                 message:'Register User Successfully',
@@ -144,6 +147,105 @@ const userCtrl ={
             response.status(500)
             response.send({
                 error:'unable to register the user'
+            })
+        }
+    },
+    loginWithPassword:async(request,response)=>{
+        try{
+            const user = await userService.getByEmailOrMobileNo(request.body.emailOrMobileNo)
+            if(user){
+                const isPasswordMatched = await bcrypt.compare(request.body.password,user.password);
+                if(isPasswordMatched){
+                    response.status(200)
+                    response.send({
+                        message:'Logged In Successfully!!'
+                    })
+                    
+                }else{
+                    response.status(400)
+                    response.send({
+                        message:'incorrect Password',
+                    })
+                }
+                }else{
+                response.status(400)
+                response.send({
+                    message:'unregistered email or mobile no'
+                })
+            }
+
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to login the user'
+            })
+        }
+    },
+    deleteUser: async(request,response)=>{
+        try{
+            await userService.deleteById(request.params.id);
+            response.status(200)
+            response.send({
+                message:"deleted user successfully"
+            })
+
+        }catch(error){
+            console.log(error)
+            response.status(500)
+            response.send({
+                error:"unable to delete the user"
+            })
+        }
+    },
+
+    getById: async(request,response)=>{
+        try{
+            const user = await userService.getById(request.params.id);
+            response.status(200)
+            response.send({
+                message:"  Retrieved user successfully",
+                data:user
+            })
+
+        }catch(error){
+            console.log(error)
+            response.status(500)
+            response.send({
+                error:"unable to retrieve the user"
+            })
+        }
+    },
+
+    getAll: async(request,response)=>{
+        try{
+            const user = await userService.getAll();
+            response.status(200)
+            response.send({
+                message:"  Retrieved users successfully",
+                data:user
+            })
+
+        }catch(error){
+            console.log(error)
+            response.status(500)
+            response.send({
+                error:"unable to retrieve the users"
+            })
+        }
+    },
+    updateUser: async(request,response)=>{
+        try{
+            const user = await userService.updateUser(request.params.id,request.body)
+            response.status(200)
+            response.send({
+                message:'user updated successfully',
+                data:user
+            })
+
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to update user'
             })
         }
     }

@@ -1,0 +1,17 @@
+Hashing Technique : Hashing is convert plain text into hash.
+
+
+Bcrypt:
+
+installation :
+npm install bcrypt
+
+To Hash Password :
+
+const bcrypt = require('bcrypt');
+
+    await bcrypt.hash(myPlaintextPassword, saltRounds);
+
+To compare Hash with Plain password :
+
+    await bcrypt.compare(myPlaintextPassword, hash);

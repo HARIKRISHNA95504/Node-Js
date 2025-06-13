@@ -6,10 +6,24 @@ const userSvc = {
         return await user.save();
     },
     getAll:async()=>{
-        return user.find()
+        return userModel.find()
     },
     getById: async()=>{
-        return user.findById(id);
+        return userModel.findById(id);
+    },
+    getByEmailOrMobileNo:(emailMobileNo)=>{
+        return userModel.findOne({
+            $or:[
+                {email:emailMobileNo},
+                {mobileNo:emailMobileNo}
+            ]
+        })
+    },
+    deleteById: async(id)=>{
+        return userModel.findByIdAndDelete(id)
+    },
+    updateUser : async(id,data)=>{
+        return userModel.findByIdAndUpdate(id,{$set:data},{new:true});
     }
 
 }

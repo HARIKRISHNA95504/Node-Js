@@ -795,7 +795,8 @@ router.get('/',tokenValidator,usersCtrl.getAll)
 router.get('/:id',usersCtrl.getById)
 router.put('/:id',usersCtrl.updateUser)
 ```
-* create a model for seller
+# create a model for seller and Perform CRUD Operations
+* Performing CRUD Operations on seller
 * seller.model.js
 ```
 const mongoose = require('mongoose')

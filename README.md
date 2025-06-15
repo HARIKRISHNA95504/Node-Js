@@ -747,6 +747,10 @@ router.put('/:id',usersCtrl.updateUser)
     "accesstoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNyaW51QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjU2MzYyNjUzMTQiLCJpYXQiOjE3NDk5NTI4MTcsImV4cCI6MTc0OTk1NjQxN30.Fe0SrBM8uKuENWaFs9Mum0wgyE4tEr47xBldYmueHx8"
 }
 ```
+* To verify the token
+* create a seperate folder in EC-services
+* the folder name should be middlewares
+* then create a file inside the middlewares folder the file should be token-validation.js
 
 
 

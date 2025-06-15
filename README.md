@@ -523,6 +523,20 @@ const bcrypt = require('bcrypt');
 ```
  await bcrypt.compare(myPlaintextPassword, hash);
 ```
+* to Login give the credentials like theese
+* in postman 
+```
+http://localhost:3000/users/login-with-password
+```
+* in postman method is "Post"
+* then go to the "body" and "raw" give this type of credentials
+* for successsfull login
+```
+{
+   "emailOrMobileNo": "srinu@gmail.com",
+    "password": "srinu123"
+}
+```
 * users.ctrl.js
 ```
 loginWithPassword:async(request,response)=>{
@@ -677,7 +691,66 @@ router.get('/:id',usersCtrl.getById)
 router.get('/',usersCtrl.getAll)
 router.put('/:id',usersCtrl.updateUser)
 ```
+# Date : 08-11-2024 Topic: generate access token
+* giveing these details in
+* users.ctrl.js
+```
+  loginWithPassword:async(request,response)=>{
+        try{
+            const user = await userService.getByEmailOrMobileNo(request.body.emailOrMobileNo)
+            if(user){
+                const isPasswordMatched = await bcrypt.compare(request.body.password,user.password);
+                if(isPasswordMatched){
+                    const token = await jwt.sign({
+                        email:user.email,
+                        mobile:user.mobileNo
+                    },'you can not steel my password',{expiresIn:'1h'})
+                    response.status(200)
+                    response.send({
+                        message:'Logged In Successfully!!',
+                        accesstoken:token
+                    })
+                    
+                }else{
+                    response.status(400)
+                    response.send({
+                        message:'incorrect Password',
+                    })
+                }
+                }else{
+                response.status(400)
+                response.send({
+                    message:'unregistered email or mobile no'
+                })
+            }
 
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to login the user'
+            })
+        }
+    }
+```
+* than we get the Json web token
+* give this in postman body and raw
+```
+{
+   "emailOrMobileNo": "srinu@gmail.com",
+    "password": "srinu123"
+}
+```
+* then will get the accesstoken
+```
+{
+    "message": "Logged In Successfully!!",
+    "accesstoken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNyaW51QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjU2MzYyNjUzMTQiLCJpYXQiOjE3NDk5NTI4MTcsImV4cCI6MTc0OTk1NjQxN30.Fe0SrBM8uKuENWaFs9Mum0wgyE4tEr47xBldYmueHx8"
+}
+```
+* To verify the token
+* create a seperate folder in EC-services
+* the folder name should be middlewares
+* then create a file inside the middlewares folder the file should be token-validation.js
 
 
 

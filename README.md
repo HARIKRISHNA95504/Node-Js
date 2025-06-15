@@ -779,6 +779,10 @@ const tokenValidator = async (request,response,next)=>{
 
 module.exports = tokenValidator;
 ```
+* where the token is validate is
+* goto authorization and click on Bearer Token
+* then give the access token
+* and then validate it
 * users.router.js
 *  include the function tokenValidator to the respected router
 ```
@@ -984,6 +988,52 @@ module.exports = router;
 const sellerRouter = require('./routers/sellers.router')
 
 app.use('/sellers',sellerRouter)
+```
+# 25-11-2024 
+* to private the values using token validatator
+* which of thw following data private
+* that data willbe added tokenvalidator in the file users.router.js
+* it will use any of teh following data like products also we can validate token
+* users.router.js
+```
+router.get('/',tokenValidator,usersCtrl.getAll)
+router.get('/:id',tokenValidator,usersCtrl.getById)
+```
+* we can manage the token validator message
+* token-validation.js
+```
+
+const jwt = require('jsonwebtoken')
+const tokenValidator = async (request,response,next)=>{
+    try{
+        if(request.headers.authorization){
+            const token = request.headers.authorization.replace("Bearer ", "");
+            const userInfo = await jwt.verify(token,'you can not steel my password')
+            next();
+        }else{
+            response.status(401)
+            response.send({
+            error:'Token is required'
+            })
+        }
+
+    }catch(error){
+        console.log(error)
+        if(error.message.includes('jwt expired')){
+            response.status(500)
+            response.send({
+            error:'Token is Expired'
+        })
+        }else{
+            response.status(500)
+            response.send({
+                error:'unable to validate the token'
+            })
+        }
+    }
+}
+
+module.exports = tokenValidator;
 ```
 
 

@@ -751,6 +751,50 @@ router.put('/:id',usersCtrl.updateUser)
 * create a seperate folder in EC-services
 * the folder name should be middlewares
 * then create a file inside the middlewares folder the file should be token-validation.js
+* token-validation.js
+```
+
+const jwt = require('jsonwebtoken')
+const tokenValidator = async (request,response,next)=>{
+    try{
+        if(request.headers.authorization){
+            const token = request.headers.authorization.replace("Bearer ", "");
+            const userInfo = await jwt.verify(token,'you can not steel my password')
+            next();
+        }else{
+            response.status(401)
+            response.send({
+            error:'Token is required'
+            })
+        }
+
+    }catch(error){
+        console.log(error)
+        response.status(500)
+        response.send({
+            error:'unable to validate the token'
+        })
+    }
+}
+
+module.exports = tokenValidator;
+```
+* users.router.js
+*  include the function tokenValidator to the respected router
+```
+const express = require('express');
+const router = express.Router();
+const tokenValidator = require('../middlewares/token-validation')
+
+const usersCtrl = require('../controllers/users.ctrl')
+
+router.post('/register',usersCtrl.register)
+router.post('/login-with-password',usersCtrl.loginWithPassword)
+router.delete('/:id',usersCtrl.deleteUser)
+router.get('/',tokenValidator,usersCtrl.getAll)
+router.get('/:id',usersCtrl.getById)
+router.put('/:id',usersCtrl.updateUser)
+```
 
 
 

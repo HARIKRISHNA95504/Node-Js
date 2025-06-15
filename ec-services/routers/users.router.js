@@ -27,7 +27,7 @@ router.post('/register',usersCtrl.register)
 router.post('/login-with-password',usersCtrl.loginWithPassword)
 router.delete('/:id',usersCtrl.deleteUser)
 router.get('/',tokenValidator,usersCtrl.getAll)
-router.get('/:id',usersCtrl.getById)
+router.get('/:id',tokenValidator,usersCtrl.getById)
 router.put('/:id',usersCtrl.updateUser)
 
 

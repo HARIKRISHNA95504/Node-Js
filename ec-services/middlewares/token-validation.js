@@ -15,10 +15,17 @@ const tokenValidator = async (request,response,next)=>{
 
     }catch(error){
         console.log(error)
-        response.status(500)
-        response.send({
-            error:'unable to validate the token'
+        if(error.message.includes('jwt expired')){
+            response.status(500)
+            response.send({
+            error:'Token is Expired'
         })
+        }else{
+            response.status(500)
+            response.send({
+                error:'unable to validate the token'
+            })
+        }
     }
 }
 

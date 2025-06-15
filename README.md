@@ -795,6 +795,196 @@ router.get('/',tokenValidator,usersCtrl.getAll)
 router.get('/:id',usersCtrl.getById)
 router.put('/:id',usersCtrl.updateUser)
 ```
+* create a model for seller
+* seller.model.js
+```
+const mongoose = require('mongoose')
+
+const sellerSchema= new mongoose.Schema({
+        name:{type:"string"},
+        businessName:{type:'string'},
+        email:{type:"string"},
+        phone:{type:"string"},
+        address:{
+            street:{type:"string"},
+            city:{type:"string"},
+            state:{type:"string"},
+            postalCode:{type:"string"},
+            country:{type:"string"}    
+        },
+        gstNumber:{
+                type:'string',
+                unique:true
+        },
+        bankDetails:{
+              accountNumber:{type:"string"},
+              bankName:{type:"string"}, 
+              ifscCode:{type:"string"} 
+        },
+        storeUrl:{
+                type:'string',
+                unique:true
+        },
+        rating:{
+                type:'Number',
+                default:0
+        },
+        totalSales:{
+                type:'Number',
+                default:0
+        },
+        isVerified:{
+                type:'boolean',
+                default:false
+        },
+        createdAt:{
+                type:'Date',
+                default:Date.now
+        },
+        updatedAt:{
+                type:'Date',
+                default:Date.now
+        }
+
+ })
+
+// sellerSchema.pre("save", function (next) {
+    this.updatedAt = Date.now();
+    next();
+});
+
+ const sellerModel = mongoose.model('seller',sellerSchema)
+ module.exports = sellerModel;
+```
+* sellers.ctrl.js
+```
+const express = require('express')
+const sellerModel= require('../models/seller.model')
+
+const sellerCtrl ={
+    create: async (request,response)=>{
+        const seller = new sellerModel(request.body)
+        try{
+            const savedSeller = await seller.save()
+            response.status(201).send({
+                message:'inserted seller successfully',
+                data:savedSeller
+            })
+        }catch(error){
+            console.log(error)
+            response.status(500).send({
+                error:'unable to insert seller'
+            })
+        }
+    },
+    getAll:async(request,response) =>{
+        try{
+            const sellers = await sellerModel.find()
+            response.status(200).send({
+                message:'sellers retrieve successfully',
+                data:sellers
+            })
+
+        }catch(error){
+            response.status(500).send({
+                error:'unable to retrieve the sellers'
+            })
+        }
+    },
+    getById: async(request,response)=>{
+        try{
+            const seller = await sellerModel.findById(request.params.id)
+            if(seller){
+                response.status(200).send({
+                message:'retrieve seller successfully!!',
+                data:seller
+            })}else{
+                response.status(404).send({
+                    message:'seller not found',
+                })
+            }
+
+        }catch(error){
+            response.status(500).send({
+                error:'unable to retrive seller'
+            })
+        }
+    },
+    update: async(request,response) =>{
+        const sellerId = request.params.id
+        try{
+            const savedSeller  = await sellerModel.findByIdAndUpdate(sellerId,{$set:request.body},{new:true})
+            response.status(200).send({
+                message:'update seller succcessfully',
+                data:savedSeller
+            })
+
+        }catch(error){
+            response.status(500).send({
+                error:'unable to update seller'
+            })
+        }
+    },
+    delete: async(request,response) =>{
+        const sellerId = request.params.id
+        try{
+            await sellerModel.findByIdAndDelete(sellerId)
+            response.status(200).send({
+                message:'successfully deleted seller',
+            })
+
+        }catch(error){
+            response.status(500).send({
+                error:'unable to delete the seller!!'
+            })
+        }
+    },
+    patch: async(request,response) =>{
+        try{
+            const sellerId = request.params.id
+            const seller = await sellerModel.findById(sellerId)
+            for(let key in request.body){
+                seller[key]=request.body[key]
+            }
+
+            const sellerUpdate = await sellerModel.findByIdAndUpdate(sellerId,{$set:seller},{new:true})
+            response.status(200).send({
+                message:'successfully updated the seller fields',
+                data:sellerUpdate
+            })
+            
+        }catch(error){
+            response.status(500).send({
+                error:'unable to updated the seller fields!!'
+            })
+        }
+    }
+}
+
+module.exports = sellerCtrl;
+```
+* sellers.router.js
+```
+const express = require('express')
+const router = express.Router();
+
+const sellersCtrl = require('../controllers/sellers.ctrl')
+
+router.post('/',sellersCtrl.create)
+router.put('/:id',sellersCtrl.update)
+router.get('/',sellersCtrl.getAll)
+router.get('/:id',sellersCtrl.getById)
+router.delete('/:id',sellersCtrl.delete)
+router.patch('/:id',sellersCtrl.patch)
+module.exports = router;
+```
+* index.js
+```
+const sellerRouter = require('./routers/sellers.router')
+
+app.use('/sellers',sellerRouter)
+```
+
 
 
 

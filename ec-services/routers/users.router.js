@@ -11,10 +11,10 @@
 
 const express = require('express');
 const router = express.Router();
+const tokenValidator = require('../middlewares/token-validation')
 
 //import the productsCtrls
 const usersCtrl = require('../controllers/users.ctrl')
-
 // router.get('/:id',usersCtrl.getById)
 // router.get('/',usersCtrl.getAll)
 // router.delete('/:id',usersCtrl.delete)
@@ -26,7 +26,7 @@ const usersCtrl = require('../controllers/users.ctrl')
 router.post('/register',usersCtrl.register)
 router.post('/login-with-password',usersCtrl.loginWithPassword)
 router.delete('/:id',usersCtrl.deleteUser)
-router.get('/',usersCtrl.getAll)
+router.get('/',tokenValidator,usersCtrl.getAll)
 router.get('/:id',usersCtrl.getById)
 router.put('/:id',usersCtrl.updateUser)
 

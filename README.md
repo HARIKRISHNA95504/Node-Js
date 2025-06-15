@@ -993,11 +993,18 @@ app.use('/sellers',sellerRouter)
 * to private the values using token validatator
 * which of thw following data private
 * that data willbe added tokenvalidator in the file users.router.js
-* it will use any of teh following data like products also we can validate token
 * users.router.js
 ```
 router.get('/',tokenValidator,usersCtrl.getAll)
 router.get('/:id',tokenValidator,usersCtrl.getById)
+```
+* it will use any of teh following data like products also we can validate token
+*  you give validate the products just give the tokenvalidator
+*  it will extract the function from middlewares
+*  products.router.js
+```
+router.get('/',tokenValidator,productsCtrl.getAll)
+router.get('/:id',tokenValidator,productsCtrl.getById)
 ```
 * we can manage the token validator message
 * token-validation.js

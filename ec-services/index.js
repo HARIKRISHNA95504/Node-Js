@@ -8,6 +8,7 @@ const productsCtrl = require('./controllers/products.ctrls')
 const employeeCtrls = require('./controllers/employees.ctrls')
 const productsRouter = require('./routers/products.router')
 const usersRouter = require('./routers/users.router')
+const sellerRouter = require('./routers/sellers.router')
 // const usersRouter = require('./routers/users.router')
 // const usersCtrl = require('./controllers/users.ctrl')
 
@@ -20,6 +21,7 @@ app.get('/',(request,response)=>{
 // another api 
 app.use('/products',productsRouter)
 app.use('/users',usersRouter)
+app.use('/sellers',sellerRouter)
 // app.use('/users',usersRouter)
 // app.get('/products/:id',productsCtrl.getById)
 // app.delete('/products/:id',productsCtrl.delete)

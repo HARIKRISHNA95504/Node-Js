@@ -1,24 +1,6 @@
-We want to generate the token by this Package JWT
-JWT : JSON Web Token
-> JWT or JSON Web Tokens are most commonly used to identyfy an authentication user
-> They are issued by authentication server and are consumed by the client server
-> to secure its API
+const mongoose = require('mongoose')
 
-Installation :
-         npm install jsonwebtoken
-
-Generation of access token :
-
-        var jwt = require('jsonwebtoken');
-        var token = jwt.sign(data,secret, { expiresIn:'1h'}); 
-
-To verify the access Token :
-
-    var decoded = jwt.verify(token, secret)
-
-Create a model for seller :
-
- const seller={
+const sellerSchema= new mongoose.Schema({
         name:{type:"string"},
         businessName:{type:'string'},
         email:{type:"string"},
@@ -44,11 +26,11 @@ Create a model for seller :
                 unique:true
         },
         rating:{
-                type:'float',
-                default:0.0
+                type:'Number',
+                default:0
         },
         totalSales:{
-                type:'integer',
+                type:'Number',
                 default:0
         },
         isVerified:{
@@ -64,4 +46,12 @@ Create a model for seller :
                 default:Date.now
         }
 
- }
+ })
+
+ sellerSchema.pre("save", function (next) {
+    this.updatedAt = Date.now();
+    next();
+});
+
+ const sellerModel = mongoose.model('seller',sellerSchema)
+ module.exports = sellerModel;

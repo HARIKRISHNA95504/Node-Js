@@ -1,0 +1,17 @@
+We want to generate the token by this Package JWT
+JWT : JSON Web Token
+> JWT or JSON Web Tokens are most commonly used to identyfy an authentication user
+> They are issued by authentication server and are consumed by the client server
+> to secure its API
+
+Installation :
+         npm install jsonwebtoken
+
+Generation of access token :
+
+        var jwt = require('jsonwebtoken');
+        var token = jwt.sign(data,secret, { expiresIn:'1h'}); 
+
+To verify the access Token :
+
+    var decoded = jwt.verify(token, secret)

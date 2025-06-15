@@ -8,7 +8,7 @@ const userSvc = {
     getAll:async()=>{
         return userModel.find()
     },
-    getById: async()=>{
+    getById: async(id)=>{
         return userModel.findById(id);
     },
     getByEmailOrMobileNo:(emailMobileNo)=>{

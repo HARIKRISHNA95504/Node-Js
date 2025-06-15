@@ -131,6 +131,7 @@
 const { response, request } = require('express');
 const userService = require('../services/users.service')
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 
 const userCtrl ={
     register:async(request,response)=>{
@@ -144,6 +145,7 @@ const userCtrl ={
             })
 
         }catch(error){
+            console.log(error)
             response.status(500)
             response.send({
                 error:'unable to register the user'
@@ -156,9 +158,14 @@ const userCtrl ={
             if(user){
                 const isPasswordMatched = await bcrypt.compare(request.body.password,user.password);
                 if(isPasswordMatched){
+                    const token = await jwt.sign({
+                        email:user.email,
+                        mobile:user.mobileNo
+                    },'you can not steel my password',{expiresIn:'1h'})
                     response.status(200)
                     response.send({
-                        message:'Logged In Successfully!!'
+                        message:'Logged In Successfully!!',
+                        accesstoken:token
                     })
                     
                 }else{

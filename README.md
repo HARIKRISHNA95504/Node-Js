@@ -1171,6 +1171,41 @@ const reviewsRouter = require('./routers/reviews.router')
 
 app.use('/reviews',reviewsRouter)
 ```
+# 26-11-2024 Topic : Average rating Part- 2
+* mapping the reviews for the product based on productId
+* take the productId in the reviews then mapp to the existing product
+* async-await-products.ctrls.js
+```
+const reviewService = require("../services/reviews.service");
+
+getById: async(request,response)=>{
+            const productId = request.params.id
+        try{
+            const product = await productsModal.findById(productId);
+            if(product){
+                const reviews = await reviewService.getByProductId(productId)
+                response.status(200)
+                response.send({
+                message:'retrive product successfully',
+                data:{...product._doc,reviews}  // Herw the ._doc is the clear the unneceery details 
+                })
+            }else{
+                response.status(404)
+                response.send({
+                message:' product not found',
+                })
+            }
+         }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrive the product',
+                error:error
+            })
+        }
+
+    }
+```
+
 
 
 

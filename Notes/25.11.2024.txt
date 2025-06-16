@@ -1,0 +1,5 @@
+Average Rating :
+
+    Average Rating = rating 1 + rating 2 + rating 3 + ....+ rating N  
+                    --------------------------------------------------
+                                rating Count

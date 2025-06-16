@@ -1042,7 +1042,135 @@ const tokenValidator = async (request,response,next)=>{
 
 module.exports = tokenValidator;
 ```
+# 25-11-2024
+* Average rating to display in the website
+* step -1
+* create a file in models folder
+* the name should be review.model.js
+* copy the user.model.js code into this change the required fields
+* review.model.js
+```
+const mongoose = require('mongoose')
 
+const reviewSchema = new mongoose.Schema({
+    rating:{
+        type:Number,
+        default:0,
+    },
+    title:{
+        type:String,
+        default:null
+    },
+    description:{
+        type:String,
+        default:null
+    },
+    // Foreign Key
+    productId:{
+        type:String
+    },
+    userId:{
+        type:String
+    }
+
+ });
+//  const productModel = mongoose.Schema('products',productSchema)
+
+ const reviewModel =mongoose.model('reviews',reviewSchema);
+ module.exports = reviewModel;
+```
+# Step 2
+* create the Service for the reviewmodel in services folder
+* the name should be reviews.service.js
+* copy the users.serivce.js code into this change the required fields
+* reviews.service.js
+```
+const reviewModel = require('../models/review.model')
+
+const reviewSvc = {
+    create: async(data) =>{
+        const review = new reviewModel(data);
+        return await review.save();
+    },
+    getAll:async()=>{
+        return reviewModel.find()
+    },
+    getById: async(id)=>{
+        return reviewModel.findById(id);
+    },
+    // this retrive revies for the particular product
+    getByProductId:(productId)=>{
+        return reviewModel.find({productId:productId})
+    },
+    deleteById: async(id)=>{
+        return reviewModel.findByIdAndDelete(id)
+    },
+    update: async(id,data)=>{
+        return reviewModel.findByIdAndUpdate(id,{$set:data},{new:true});
+    }
+
+}
+module.exports =reviewSvc;
+```
+# step 3
+* create a controller in controller folder
+* the name shold be reviews.ctrl.js
+* reviews.ctrl.js
+```
+const { response, request } = require('express');
+const reviewService = require('../services/reviews.service')
+
+const reviewCtrl ={
+    create:async(request,response)=>{
+        try{
+            const review = await reviewService.create(request.body)
+            response.status(201)
+            response.send({
+                message:'crated Review Successfully',
+                data:review
+            })
+
+        }catch(error){
+            console.log(error)
+            response.status(500)
+            response.send({
+                error:'unable to create the Review'
+            })
+        }
+    }
+    
+}
+
+module.exports = reviewCtrl;
+```
+# step 4
+* create a reviews route in the routers folder
+* the name sholud be reviews.router.js
+* reviews.router.js
+```
+
+const express = require('express');
+const router = express.Router();
+const tokenValidator = require('../middlewares/token-validation')
+
+//import the productsCtrls
+const reviewsCtrl = require('../controllers/reviews.ctrl')
+
+
+router.post('/',tokenValidator,reviewsCtrl.create)
+
+
+module.exports =router;
+```
+
+# Step -5
+* index.js
+* include these two lines
+```
+const reviewsRouter = require('./routers/reviews.router')
+
+app.use('/reviews',reviewsRouter)
+```
 
 
 

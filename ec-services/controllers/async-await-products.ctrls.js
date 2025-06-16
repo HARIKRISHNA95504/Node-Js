@@ -1,6 +1,6 @@
 const { response, request } = require("express");
 const productsModal = require('../models/product.model');
-const productModel = require("../models/product.model");
+const reviewService = require("../services/reviews.service");
 
 const productsCtrl={
     // is the code is ASYNC AND AWAIT
@@ -26,10 +26,11 @@ const productsCtrl={
         try{
             const product = await productsModal.findById(productId);
             if(product){
+                const reviews = await reviewService.getByProductId(productId)
                 response.status(200)
                 response.send({
                 message:'retrive product successfully',
-                data:product
+                data:{...product._doc,reviews}
                 })
             }else{
                 response.status(404)

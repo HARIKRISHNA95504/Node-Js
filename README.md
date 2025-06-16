@@ -1205,6 +1205,104 @@ getById: async(request,response)=>{
 
     }
 ```
+# Aggregation 
+# it is a Framework
+```
+Aggregation Framework : -- Mongoose -Mongo Db - Aggregation Pipeline
+> it used for to add multiple stages to the querie
+> an aggregation framework query is an array of stages
+>  A stage is an object description of how MongoDB should transform any document coming into the stage.
+
+Stages : 
+
+1. $match: It returns the matching documents as an output.
+
+        modelName.aggregate([
+            {$match : { age: {$gte : 30}} }
+        ])
+
+2. $group : Generates multiple groups from whole documents.
+
+        modelName.aggregate([
+            { $group:{ _id:'$rating',count : $sum}}
+        ])
+
+
+
+    we can write the simple structure instead of the above two queri in a single querie 
+
+  > SINGLE QUERIE WITH $MATCH & $GROUP :
+
+            modelName.aggregate([
+                {$match : { age: {$gte : 30}} },
+                { $group:{ _id:'$rating',count : $sum}}
+            ])
+
+
+3. $project : Projects Key value pairs with required names.
+
+        modelName.aggregate([
+            {$project : {
+                rating:'$_id',
+                count:'$count'
+            }}
+        ])
+```
+* reviews.service.js
+```
+getAvgRating:(productId)=>{
+        return reviewModel.aggregate([
+            {$match :{productId:productId}},
+            {$group: {_id:'$productId',averageRating:{$avg :'$rating'}}},
+            {$project: {
+                _id:0  
+            }}  // for ignoring the id in the console
+        ])
+    },
+    getRatingCount:(productId)=>{
+        return reviewModel.aggregate([
+            {$match :{productId:productId}},
+            {$group: {_id:'$rating',count: {$sum :1}}},
+         {$project :{
+            rating:'_id',
+            count:'$count',
+            _id:0
+         }}// for ignoring the id in the console
+        ])
+    }
+```
+* async-await-products.js
+```
+getById: async(request,response)=>{
+            const productId = request.params.id
+        try{
+            const product = await productsModal.findById(productId);
+            if(product){
+                const reviews = await reviewService.getByProductId(productId)
+                const avgRatingResponse = await reviewService.getAvgRating(productId)
+                const ratingsCountResponse = await reviewService.getRatingCount(productId)
+                console.log(ratingsCountResponse)
+                response.status(200)
+                response.send({
+                message:'retrive product successfully',
+                data:{...product._doc,reviews,avgRating: parseFloat(avgRatingResponse[0].averageRating).toFixed(1),ratingsCount:ratingsCountResponse}
+                })
+            }else{
+                response.status(404)
+                response.send({
+                message:' product not found',
+                })
+            }
+         }catch(error){
+            response.status(500)
+            response.send({
+                message:'unable to retrive the product',
+                error:error
+            })
+        }
+
+    }
+```
 
 
 

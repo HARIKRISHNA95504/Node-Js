@@ -104,6 +104,9 @@ Password: @20FH1a0596
 ```
 mongodb+srv://Harikrishna:<db_password>@nodejs-cluster1.rm9towc.mongodb.net/
 ```
+```
+mongodb+srv://Harikrishna:%4020FH1a0596@nodejs-cluster1.rm9towc.mongodb.net/
+```
 * go to the mangodb compasss
 * click on the add New connection and past the url
 ```

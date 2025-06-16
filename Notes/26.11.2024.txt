@@ -1,0 +1,42 @@
+Aggregation Framework : -- Mongoose -Mongo Db - Aggregation Pipeline
+> it used for to add multiple stages to the querie
+> an aggregation framework query is an array of stages
+>  A stage is an object description of how MongoDB should transform any document coming into the stage.
+
+Stages : 
+
+1. $match: It returns the matching documents as an output.
+
+        modelName.aggregate([
+            {$match : { age: {$gte : 30}} }
+        ])
+
+2. $group : Generates multiple groups from whole documents.
+
+        modelName.aggregate([
+            { $group:{ _id:'$rating',count : $sum}}
+        ])
+
+
+
+    we can write the simple structure instead of the above two queri in a single querie 
+
+  > SINGLE QUERIE WITH $MATCH & $GROUP :
+
+            modelName.aggregate([
+                {$match : { age: {$gte : 30}} },
+                { $group:{ _id:'$rating',count : $sum}}
+            ])
+
+
+3. $project : Projects Key value pairs with required names.
+
+        modelName.aggregate([
+            {$project : {
+                rating:'$_id',
+                count:'$count'
+            }}
+        ])
+
+
+>> RESOURCE LINK : https://masteringjs.io/tutorials/mongoose/aggregate

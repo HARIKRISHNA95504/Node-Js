@@ -20,6 +20,26 @@ const reviewSvc = {
     },
     update: async(id,data)=>{
         return reviewModel.findByIdAndUpdate(id,{$set:data},{new:true});
+    },
+    getAvgRating:(productId)=>{
+        return reviewModel.aggregate([
+            {$match :{productId:productId}},
+            {$group: {_id:'$productId',averageRating:{$avg :'$rating'}}},
+            {$project: {
+                _id:0  
+            }}  // for ignoring the id in the console
+        ])
+    },
+    getRatingCount:(productId)=>{
+        return reviewModel.aggregate([
+            {$match :{productId:productId}},
+            {$group: {_id:'$rating',count: {$sum :1}}},
+         {$project :{
+            rating:'_id',
+            count:'$count',
+            _id:0
+         }}// for ignoring the id in the console
+        ])
     }
 
 }

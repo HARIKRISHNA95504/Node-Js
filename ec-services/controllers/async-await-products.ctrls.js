@@ -27,10 +27,13 @@ const productsCtrl={
             const product = await productsModal.findById(productId);
             if(product){
                 const reviews = await reviewService.getByProductId(productId)
+                const avgRatingResponse = await reviewService.getAvgRating(productId)
+                const ratingsCountResponse = await reviewService.getRatingCount(productId)
+                console.log(ratingsCountResponse)
                 response.status(200)
                 response.send({
                 message:'retrive product successfully',
-                data:{...product._doc,reviews}
+                data:{...product._doc,reviews,avgRating: parseFloat(avgRatingResponse[0].averageRating).toFixed(1),ratingsCount:ratingsCountResponse}
                 })
             }else{
                 response.status(404)

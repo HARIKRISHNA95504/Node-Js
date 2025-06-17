@@ -13,6 +13,7 @@ const reviewsRouter = require('./routers/reviews.router')
 // const usersRouter = require('./routers/users.router')
 // const usersCtrl = require('./controllers/users.ctrl')
 
+app.use(express.static('uploads/'))  // i want to uploads folder out side the application
 app.use(bodyParser.json())
 
 // This the first api

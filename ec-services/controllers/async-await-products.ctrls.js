@@ -26,6 +26,9 @@ const productsCtrl={
         try{
             const product = await productsModal.findById(productId);
             if(product){
+                // generate the image URL
+                product.imgSrc = request.protocol + '://' +  request.get('host')+'/'+product.imgSrc
+                
                 const reviews = await reviewService.getByProductId(productId)
                 const avgRatingResponse = await reviewService.getAvgRating(productId)
                 const ratingsCountResponse = await reviewService.getRatingCount(productId)
@@ -33,7 +36,7 @@ const productsCtrl={
                 response.status(200)
                 response.send({
                 message:'retrive product successfully',
-                data:{...product._doc,reviews,avgRating: parseFloat(avgRatingResponse[0].averageRating).toFixed(1),ratingsCount:ratingsCountResponse}
+                data:{...product._doc,reviews, avgRating:avgRatingResponse && avgRatingResponse[0].averageRating? parseFloat(avgRatingResponse[0].averageRating).toFixed(1):0,ratingsCount:ratingsCountResponse}
                 })
             }else{
                 response.status(404)
@@ -139,6 +142,33 @@ const productsCtrl={
             })
         }
     },
+
+    // file upload API
+
+    uploadImage: async(request,response)=>{
+       try{
+            const productId = request.body.productId
+            const product = await productsModal.findById(productId)
+
+            product['imgSrc']= request.body.filename
+            const savedProduct = await productsModal.findByIdAndUpdate(productId,{$set:product},{new:true})
+            console.log(savedProduct)
+            response.status(200)
+            response.send({
+                message:'updated image succesfully',
+                data:savedProduct
+            })
+
+
+        }catch(error){
+            console.log(error)
+            response.status(500)
+            response.send({
+                message:'unable to upload image'
+            })
+        }
+    },
+
     // Pagenation.....
 
     pagination: async (request,response)=>{

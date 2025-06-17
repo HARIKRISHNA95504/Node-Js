@@ -1,0 +1,35 @@
+File Upload :
+
+Multer :
+> Multer is a node.js middleware for handling multipart/form-data,
+>  which is primarily used for uploading files.
+
+Installation :
+         npm install multer
+
+
+
+ const multer = require('multer')
+
+ const storage = multer.diskStorage({
+    destination:(request,file,callBackFunc)=>{
+        callBackFunc(null,'uploads/')
+
+    },
+    filename:(request,file,callBackFunc)=>{
+        const formattedFileName = Date.now() + '-' + file.originalname;
+        request.body.filename = formattedFileName
+
+        callBackFunc(null,formattedFileName);
+    }
+})
+
+const upload = multer({storage})
+
+router.post('/upload-image',upload.single('productImage'),productsCtrl.uploadImage)
+
+Multer :
+diskstorage -- prdefined function 
+then ist accepts one object
+filename, destination ara the keys
+3 parameters request,file,callBackFunc

@@ -1712,12 +1712,14 @@ router.put('/:id',cartsCtrl.update)
 
 module.exports = router;
 ```
-# step 4 : 
+# step - 5 : 
 * index.js
 ```
 const cartsRouter = require('./routers/carts.router')
 app.use('/carts',cartsRouter)
 ```
+# 29-11-2024 Topic :
+
 
 
 

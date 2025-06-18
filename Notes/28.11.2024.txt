@@ -1,0 +1,153 @@
+Cart :
+
+# step-1 :
+* create a model for carts in model folder
+* cart.mdodel.js
+
+const mongoose = require('mongoose')
+const userModel = require('./user.model')
+const productModel = require('./product.model')
+const cartSchema = mongoose.Schema({
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:userModel
+    },
+    productId:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:productModel
+        }
+    ]   
+})
+
+const cartModel = mongoose.model('carts',cartSchema)
+module.exports = cartModel;
+
+
+
+# step 2 :
+* creat a service for carts in services folder
+* carts.service,js
+
+const { model } = require('mongoose')
+const cartModel = require('../models/cart.model')
+
+const cartService = {
+    create:(data)=>{
+            const cart = new cartModel(data)
+            return cart.save()
+    },
+    fetchById:(userId)=>{
+        return cartModel.findOne({userId})
+            .populate('userId','firstName lastName')
+            .populate('productId','name imgSrc actualPrice discout inStock')
+    },
+    update: (id,data)=>{
+        return cartModel.findByIdAndUpdate(id,{$set:data},{new:true})
+    }
+
+}
+module.exports = cartService
+
+
+
+# step 3 :
+* create a controller in controllers folder
+* cart.ctrl.js
+
+const { request, response } = require('express');
+const cartService = require('../services/carts.service');
+const cartModel = require('../models/cart.model');
+const { update } = require('./products.ctrls');
+
+const cartsCtrl = {
+    create : async(request,response)=>{
+        try{
+            const createdCart = await cartService.create(request.body);
+
+            response.status(201)
+            response.send({
+                data:createdCart,
+                message:' Created Cart successfully'
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to Create Cart'
+            })
+        }
+    },
+    fetchByUserId: async(request,response)=>{
+        try{
+            const cartInfo = await cartService.fetchById(request.params.userId);
+            response.status(200)
+            console.log(cartInfo)
+            response.send({
+                // data:cartInfo,
+                data:{userInfo:cartInfo.userId, productsInfo:cartInfo.productId,_id : cartInfo._id}, //we can also change the variable names
+                message:'Retrieve cart Successfully'
+            })
+
+        }catch(error){
+            response.status(500)
+            console.log(error)
+            response.send({
+                error:'unable to Retrive Cart'
+            }) 
+        }
+    },
+    update:async(request,response)=>{
+        try{
+            const updatedCart = await cartService.update(request.params.id,request.body)
+            response.status(200)
+            response.send({
+                data:updatedCart,
+                // data:{userInfo:cartInfo.userId, productsInfo:cartInfo.productId}, we can also change the variable names
+                message:'Update cart Successfully'
+            })
+
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to Update Cart'
+            }) 
+        }
+    }
+
+}
+
+
+module.exports = cartsCtrl
+
+
+
+# step 4 :
+
+* create router for routing the carts
+* in routers folder we can create a router
+* carts.router.js
+
+const express = require('express')
+const cartsCtrl = require('../controllers/carts.ctrl')
+const router = express.Router()
+
+router.post('/',cartsCtrl.create)
+router.get('/:userId',cartsCtrl.fetchByUserId)
+router.put('/:id',cartsCtrl.update)
+
+
+module.exports = router;
+
+
+
+# step 4 : 
+* index.js
+
+const cartsRouter = require('./routers/carts.router')
+app.use('/carts',cartsRouter)
+
+
+Orders :
+
+
+Emails :

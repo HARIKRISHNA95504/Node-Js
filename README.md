@@ -1718,7 +1718,130 @@ module.exports = router;
 const cartsRouter = require('./routers/carts.router')
 app.use('/carts',cartsRouter)
 ```
-# 29-11-2024 Topic :
+# 29-11-2024 Topic : Task : Creation Orders
+# 2-11-2024 Topic : Create Orders And CreateOrderId
+* order.model.js
+```
+const mongoose = require('mongoose');
+
+const orderSchema = new mongoose.Schema({
+    razorpayOrderId: {
+        type: String,
+        required: true
+    },
+    amount: {
+        type: Number,
+        required: true
+    },
+    currency: {
+        type: String,
+        default: 'INR'
+    },
+    receipt: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        default: 'created' // other values could be 'paid', 'failed', etc.
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+const orderModel = mongoose.model('orders', orderSchema);
+
+module.exports = orderModel;
+```
+* we have to install the razorpay generating the orderIds
+* install razorpay
+```
+npm install razorpay
+```
+* orders.ctrls.js
+```
+const razorpay = require('razorpay');
+const orderService = require('../services/orders.service');
+const { response, request } = require('express');
+
+const ordersCtrl ={
+    createOrderId:async(request,response)=>{
+        try{
+            const rptInstance = new razorpay({
+                key_id:'rzp_test_Xn1AnKHV457pLJ',
+                key_secret:'gryJPWev6ec3A6cnnF23dhik'
+            });
+            const orderIdInfo = await rptInstance.orders.create({
+              amount:request.body.amount,
+              currency:'INR',
+              receipt:'rel'  
+            });
+            response.status(201);
+            response.send({
+                data:orderIdInfo
+            });
+        }catch(error){
+            console.log(error)
+            response.status(500);
+            response.send({
+                message:'Unable to create order Id'
+            })
+        }
+    },
+    createOrder:async(request,response)=>{
+        try{
+            const order = await orderService.create(request.body);
+            response.status(201);
+            response.send({
+                data:order,
+                message:'Created the order sucessfully'
+            })
+        }catch(error){
+            console.log(error);
+            response.status(500)
+            response.send({
+                message:'Unable to create order'
+            })
+        }
+
+    }
+}
+
+module.exports = ordersCtrl;
+```
+* orders.service.js
+```
+const orderModel = require('../models/order.model')
+
+const orderService = {
+    create:(data)=>{
+        const order = new orderModel(data)
+        return order.save()
+    }
+}
+
+module.exports = orderService
+```
+* orders.router.js
+```
+const express = require('express')
+const ordersCtrl = require('../controllers/orders.ctrl')
+const router = express.Router()
+
+
+router.post('/createOrderId', ordersCtrl.createOrderId);
+router.post('/', ordersCtrl.createOrder);
+
+module.exports = router;
+```
+* index.js
+```
+const ordersRouter = require('./routers/orders.router')
+app.use('/orders',ordersRouter)
+```
+
 
 
 

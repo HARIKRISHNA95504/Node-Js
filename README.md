@@ -64,6 +64,108 @@ PS C:\Users\HARIKRISHNA\Desktop\NodeJs> git pull origin main --rebase
 ```
 PS C:\Users\HARIKRISHNA\Desktop\NodeJs> git push origin main
 ```
+# 24-10-2024  Topic: Project Creation
+# Step - 1:
+* create of Project folder:
+* go to the respected path
+```
+mkdir ec-services
+```
+```
+ C:\Users\HARIKRISHNA\Desktop\NodeJs> mkdir ec-services
+```
+# step -2 : initialization
+* after creating the folder navigate the respectd project folder
+* then run the commeande
+```
+npm init
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm init
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\EmpSys\emp-system> npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help init` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (ec-services)
+version: (1.0.0)                                                                                      
+description:                                                                                          
+entry point: (index.js)                                                                               
+test command:                                                                                         
+git repository:                                                                                       
+keywords:                                                                                             
+author: Harikrishna                                                                                   
+license: (ISC)                                                                                        
+About to write to C:\Users\HARIKRISHNA\Desktop\EmpSys\emp-system\package.json:
+
+{
+  "name": "emp-system",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": ,
+  "license": "ISC",
+  "description": ""
+}
+
+
+Is this OK? (yes)
+```
+# step- 3 :Express Framework installation
+* Installation
+```
+npm install express
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\EmpSys\ec-services> npm install express
+```
+# step - 4 :
+* crate file in ec-services
+* the file name is index.js
+* it create a node_modules folrder
+# step - 5 :
+* creation of entry file for the app(index.js)
+* index.js
+# step 6 : create a server 
+* index.js
+* 1. import a express
+```
+const express = require('express')
+```
+2. create a object from express function
+```
+const app = express()
+```
+3. Starts the server on the port number mentioned
+```
+app.listen(prompt,()=>{
+    console.log('Server is Up On Running!')
+})
+```
+* index.js
+```
+const express = require('express')
+
+const app = express()
+
+app.listen(prompt,()=>{
+    console.log('Server is Up On Running!')
+})
+```
+* to run the server use this command
+```
+node index.js
+```
 # 29-10-2024 Topic : MangoDb 
 * first go to the mangodb website
 ```

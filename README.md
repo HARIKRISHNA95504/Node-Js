@@ -1944,7 +1944,19 @@ const ordersRouter = require('./routers/orders.router')
 app.use('/orders',ordersRouter)
 ```
 # 5-12-2024 Topic : Forgot Password Flow Intigration using Mailgun
-
+# install mailgun package
+```
+nodemailer-mailgun-transport
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services>npm i nodemailer-mailgun-transport
+```
+```
+npm i nodemailer
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services>npm i nodemailer
+```
 
 
 

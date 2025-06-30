@@ -64,6 +64,108 @@ PS C:\Users\HARIKRISHNA\Desktop\NodeJs> git pull origin main --rebase
 ```
 PS C:\Users\HARIKRISHNA\Desktop\NodeJs> git push origin main
 ```
+# 24-10-2024  Topic: Project Creation
+# Step - 1:
+* create of Project folder:
+* go to the respected path
+```
+mkdir ec-services
+```
+```
+ C:\Users\HARIKRISHNA\Desktop\NodeJs> mkdir ec-services
+```
+# step -2 : initialization
+* after creating the folder navigate the respectd project folder
+* then run the commeande
+```
+npm init
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services> npm init
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\EmpSys\emp-system> npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help init` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (ec-services)
+version: (1.0.0)                                                                                      
+description:                                                                                          
+entry point: (index.js)                                                                               
+test command:                                                                                         
+git repository:                                                                                       
+keywords:                                                                                             
+author: Harikrishna                                                                                   
+license: (ISC)                                                                                        
+About to write to C:\Users\HARIKRISHNA\Desktop\EmpSys\emp-system\package.json:
+
+{
+  "name": "emp-system",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": ,
+  "license": "ISC",
+  "description": ""
+}
+
+
+Is this OK? (yes)
+```
+# step- 3 :Express Framework installation
+* Installation
+```
+npm install express
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\EmpSys\ec-services> npm install express
+```
+# step - 4 :
+* crate file in ec-services
+* the file name is index.js
+* it create a node_modules folrder
+# step - 5 :
+* creation of entry file for the app(index.js)
+* index.js
+# step 6 : create a server 
+* index.js
+* 1. import a express
+```
+const express = require('express')
+```
+2. create a object from express function
+```
+const app = express()
+```
+3. Starts the server on the port number mentioned
+```
+app.listen(prompt,()=>{
+    console.log('Server is Up On Running!')
+})
+```
+* index.js
+```
+const express = require('express')
+
+const app = express()
+
+app.listen(prompt,()=>{
+    console.log('Server is Up On Running!')
+})
+```
+* to run the server use this command
+```
+node index.js
+```
 # 29-10-2024 Topic : MangoDb 
 * first go to the mangodb website
 ```
@@ -1579,6 +1681,282 @@ const productsCtrl={
 module.exports =productsCtrl;
 ```
 * index.js
+
+# 28-11-2024 topic : Cart API'S
+# step-1 :
+* create a model for carts in model folder
+* cart.mdodel.js
+```
+const mongoose = require('mongoose')
+const userModel = require('./user.model')
+const productModel = require('./product.model')
+const cartSchema = mongoose.Schema({
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:userModel
+    },
+    productId:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:productModel
+        }
+    ]   
+})
+
+const cartModel = mongoose.model('carts',cartSchema)
+module.exports = cartModel;
+```
+# step 2 :
+* creat a service for carts in services folder
+* carts.service,js
+```
+const { model } = require('mongoose')
+const cartModel = require('../models/cart.model')
+
+const cartService = {
+    create:(data)=>{
+            const cart = new cartModel(data)
+            return cart.save()
+    },
+    fetchById:(userId)=>{
+        return cartModel.findOne({userId})
+            .populate('userId','firstName lastName')
+            .populate('productId','name imgSrc actualPrice discout inStock')
+    },
+    update: (id,data)=>{
+        return cartModel.findByIdAndUpdate(id,{$set:data},{new:true})
+    }
+
+}
+module.exports = cartService
+```
+# step 3 :
+* create a controller in controllers folder
+* cart.ctrl.js
+```
+const { request, response } = require('express');
+const cartService = require('../services/carts.service');
+const cartModel = require('../models/cart.model');
+const { update } = require('./products.ctrls');
+
+const cartsCtrl = {
+    create : async(request,response)=>{
+        try{
+            const createdCart = await cartService.create(request.body);
+
+            response.status(201)
+            response.send({
+                data:createdCart,
+                message:' Created Cart successfully'
+            })
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to Create Cart'
+            })
+        }
+    },
+    fetchByUserId: async(request,response)=>{
+        try{
+            const cartInfo = await cartService.fetchById(request.params.userId);
+            response.status(200)
+            console.log(cartInfo)
+            response.send({
+                // data:cartInfo,
+                data:{userInfo:cartInfo.userId, productsInfo:cartInfo.productId,_id : cartInfo._id}, //we can also change the variable names
+                message:'Retrieve cart Successfully'
+            })
+
+        }catch(error){
+            response.status(500)
+            console.log(error)
+            response.send({
+                error:'unable to Retrive Cart'
+            }) 
+        }
+    },
+    update:async(request,response)=>{
+        try{
+            const updatedCart = await cartService.update(request.params.id,request.body)
+            response.status(200)
+            response.send({
+                data:updatedCart,
+                // data:{userInfo:cartInfo.userId, productsInfo:cartInfo.productId}, we can also change the variable names
+                message:'Update cart Successfully'
+            })
+
+        }catch(error){
+            response.status(500)
+            response.send({
+                error:'unable to Update Cart'
+            }) 
+        }
+    }
+
+}
+
+
+module.exports = cartsCtrl
+```
+# step 4 :
+* create router for routing the carts
+* in routers folder we can create a router
+* carts.router.js
+```
+const express = require('express')
+const cartsCtrl = require('../controllers/carts.ctrl')
+const router = express.Router()
+
+router.post('/',cartsCtrl.create)
+router.get('/:userId',cartsCtrl.fetchByUserId)
+router.put('/:id',cartsCtrl.update)
+
+
+module.exports = router;
+```
+# step - 5 : 
+* index.js
+```
+const cartsRouter = require('./routers/carts.router')
+app.use('/carts',cartsRouter)
+```
+# 29-11-2024 Topic : Task : Creation Orders
+# 2-11-2024 Topic : Create Orders And CreateOrderId
+* order.model.js
+```
+const mongoose = require('mongoose');
+
+const orderSchema = new mongoose.Schema({
+    razorpayOrderId: {
+        type: String,
+        required: true
+    },
+    amount: {
+        type: Number,
+        required: true
+    },
+    currency: {
+        type: String,
+        default: 'INR'
+    },
+    receipt: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        default: 'created' // other values could be 'paid', 'failed', etc.
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+const orderModel = mongoose.model('orders', orderSchema);
+
+module.exports = orderModel;
+```
+* we have to install the razorpay generating the orderIds
+* install razorpay
+```
+npm install razorpay
+```
+* orders.ctrls.js
+```
+const razorpay = require('razorpay');
+const orderService = require('../services/orders.service');
+const { response, request } = require('express');
+
+const ordersCtrl ={
+    createOrderId:async(request,response)=>{
+        try{
+            const rptInstance = new razorpay({
+                key_id:'rzp_test_Xn1AnKHV457pLJ',
+                key_secret:'gryJPWev6ec3A6cnnF23dhik'
+            });
+            const orderIdInfo = await rptInstance.orders.create({
+              amount:request.body.amount,
+              currency:'INR',
+              receipt:'rel'  
+            });
+            response.status(201);
+            response.send({
+                data:orderIdInfo
+            });
+        }catch(error){
+            console.log(error)
+            response.status(500);
+            response.send({
+                message:'Unable to create order Id'
+            })
+        }
+    },
+    createOrder:async(request,response)=>{
+        try{
+            const order = await orderService.create(request.body);
+            response.status(201);
+            response.send({
+                data:order,
+                message:'Created the order sucessfully'
+            })
+        }catch(error){
+            console.log(error);
+            response.status(500)
+            response.send({
+                message:'Unable to create order'
+            })
+        }
+
+    }
+}
+
+module.exports = ordersCtrl;
+```
+* orders.service.js
+```
+const orderModel = require('../models/order.model')
+
+const orderService = {
+    create:(data)=>{
+        const order = new orderModel(data)
+        return order.save()
+    }
+}
+
+module.exports = orderService
+```
+* orders.router.js
+```
+const express = require('express')
+const ordersCtrl = require('../controllers/orders.ctrl')
+const router = express.Router()
+
+
+router.post('/createOrderId', ordersCtrl.createOrderId);
+router.post('/', ordersCtrl.createOrder);
+
+module.exports = router;
+```
+* index.js
+```
+const ordersRouter = require('./routers/orders.router')
+app.use('/orders',ordersRouter)
+```
+# 5-12-2024 Topic : Forgot Password Flow Intigration using Mailgun
+# install mailgun package
+```
+nodemailer-mailgun-transport
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services>npm i nodemailer-mailgun-transport
+```
+```
+npm i nodemailer
+```
+```
+PS C:\Users\HARIKRISHNA\Desktop\NodeJs\ec-services>npm i nodemailer
+```
 
 
 
